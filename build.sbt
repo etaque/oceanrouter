@@ -10,7 +10,8 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2" % "1.12" % "test",
   "org.scalaz" %% "scalaz-core" % "6.0.3",
   "org.scalaz" %% "scalaz-geo" % "6.0.3",
-  "org.scalaj" %% "scalaj-time" % "0.6"
+  "org.scalaj" %% "scalaj-time" % "0.6",
+  "net.sf.supercsv" % "super-csv" % "2.0.0"
 )
 
 initialCommands := "import fr.skiffr.oceanrider._"

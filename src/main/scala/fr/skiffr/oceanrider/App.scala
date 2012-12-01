@@ -9,6 +9,9 @@ object App {
     val gribReader = new GribReader(gribFile)
     val at = new DateTime(2012, 11, 28, 3, 0).toGregorianCalendar
     val c = new Coord(-32.0, -10.0)
-    print(gribReader.windAt(c, at))
+    println(gribReader.windAt(c, at))
+
+    val polar = new Polar("/Users/emilien/Downloads/qtvlm_app-3.3.3-patch1_full/polar/boat_imoca60.csv")
+    println(polar.speedFor(92, 32))
   }
 }
