@@ -1,35 +1,40 @@
 package fr.skiffr.oceanrider
 
 import net.sourceforge.jgrib._
-import scalaz.Scalaz._
-import scalaz.geo._
-import Geo._
 import java.util.Calendar
-import org.joda.time.DateTime
 
-//case class Wind(u: Float, v: Float)
+case class Wind(u: Double, v: Double)
+case class UVRecords(u: GribRecord, v: GribRecord)
+case class Coord(x: Double, y: Double)
 
 class GribReader(grib: GribFile) {
 
-  type SortedRecords = List[(Calendar, GribRecord)]
+  val recordsByDate: Map[Calendar, List[GribRecord]] = listRecords groupBy(_.getPDS.getGMTForecastTime)
 
-  val uRecords: SortedRecords = sort(recordsForDim("ugrd"))
-  val vRecords: SortedRecords = sort(recordsForDim("vgrd"))
-
-  def recordsForDim(dim: String): List[GribRecord] = {
+  def listRecords(): List[GribRecord] = {
     for {
       i <- (1 to grib.getRecordCount).toList
       record = grib.getRecord(i)
-      if record.getPDS.getType == dim
     } yield record
   }
 
-  def sort(records: List[GribRecord]): SortedRecords = {
-    records.map(r => (r.getPDS.getGMTForecastTime, r)).sortBy(_._1)
+  def forecastAt(at: Calendar): Calendar =
+    recordsByDate.keys.toList.filter(_.before(at)).sortWith((a, b) => a.after(b)).head
+
+  def uvRecordsAt(at: Calendar): UVRecords = {
+    val records = recordsByDate(forecastAt(at))
+    new UVRecords(records.find(_.getPDS.getType == "ugrd").get,
+      records.find(_.getPDS.getType == "vgrd").get)
   }
 
-  def recordAt(records: SortedRecords, at: DateTime): GribRecord = {
-
+  def valueForCoord(r: GribRecord, c: Coord): Double = {
+    val i: Int = ((c.x - r.getGDS.getGridLon1) / r.getGDS.getGridDX).toInt
+    val j: Int = ((c.y - r.getGDS.getGridLat1) / r.getGDS.getGridDY).toInt
+    r.getValue(i, j)
   }
 
+  def windAt(c: Coord, at: Calendar): Wind = {
+    val uv = uvRecordsAt(at)
+    new Wind(valueForCoord(uv.u, c), valueForCoord(uv.v, c))
+  }
 }
