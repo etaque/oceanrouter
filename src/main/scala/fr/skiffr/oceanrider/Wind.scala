@@ -6,7 +6,7 @@ case class Wind(u: Double, v: Double) {
     case _ =>
       (if (u < 0) 270 else 90) - 57.29578 * math.atan(v / u)
   }
-  lazy val speed = math.pow(u, 2) + math.pow(v, 2)
+  lazy val speed = math.sqrt(math.pow(u, 2) + math.pow(v, 2))
 
   def angleTo(otherDirection: Double) = {
     val delta = otherDirection - direction

@@ -6,7 +6,6 @@ import org.joda.time.DateTime
 
 
 case class UVRecords(u: GribRecord, v: GribRecord)
-case class Coord(x: Double, y: Double)
 
 class WeatherContext(grib: GribFile) {
 
@@ -28,13 +27,13 @@ class WeatherContext(grib: GribFile) {
       records.find(_.getPDS.getType == "vgrd").get)
   }
 
-  def valueForCoord(r: GribRecord, c: Coord): Double = {
-    val i: Int = ((c.x - r.getGDS.getGridLon1) / r.getGDS.getGridDX).toInt
-    val j: Int = ((c.y - r.getGDS.getGridLat1) / r.getGDS.getGridDY).toInt
+  def valueForCoord(r: GribRecord, c: Position): Double = {
+    val i: Int = ((c.lon - r.getGDS.getGridLon1) / r.getGDS.getGridDX).toInt
+    val j: Int = ((c.lat - r.getGDS.getGridLat1) / r.getGDS.getGridDY).toInt
     r.getValue(i, j)
   }
 
-  def windAt(c: Coord, at: DateTime): Wind = {
+  def windAt(c: Position, at: DateTime): Wind = {
     val uv = uvRecordsAt(at.toGregorianCalendar)
     new Wind(valueForCoord(uv.u, c), valueForCoord(uv.v, c))
   }

@@ -12,9 +12,11 @@ class Polar(csvPath: String) {
   val csv = new CsvListReader(new FileReader(csvPath), CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE)
   val matrix = readLines(csv, Seq[Seq[String]]())
 
-  val windSpeeds: List[Int] = matrix.head.tail.map(_.toInt).toList
+  val speedParser = (s: String) => Util.knotToMps(s.toDouble)
+
+  val windSpeeds: List[Double] = matrix.head.tail.map(speedParser).toList
   val windAngles: List[Int] = matrix.tail.map(_.head).map(_.toInt).toList
-  val speeds: Seq[Seq[Double]] = matrix.tail.map(_.tail.map(_.toDouble))
+  val speeds: Seq[Seq[Double]] = matrix.tail.map(_.tail.map(speedParser))
 
   csv.close()
 
@@ -25,12 +27,17 @@ class Polar(csvPath: String) {
     else acc
   }
 
-  def windSpeedIndex(speed: Double): Int = windSpeeds.indexWhere(s => s > speed) - 1
+  def windSpeedIndex(speed: Double): Int =
+    if (speed > windSpeeds.last) windSpeeds.size - 1
+    else windSpeeds.indexWhere(s => s > speed) - 1
 
   def windAngleIndex(angle: Double): Int = windAngles.indexWhere(a => a > angle) - 1
 
-  def speedFor(windAngle: Double, windSpeed: Double): Double =
+  def speedFor(windAngle: Double, windSpeed: Double): Double = {
+    require(windAngle >= 0 && windAngle < 360)
+    require(windSpeed >= 0)
     speeds(windAngleIndex(windAngle))(windSpeedIndex(windSpeed))
+  }
 }
 
 object Polar {
