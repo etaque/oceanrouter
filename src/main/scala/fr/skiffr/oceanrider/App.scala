@@ -9,5 +9,7 @@ object App {
     val s1 = new Step(p, at)
 
     println(s1.next(90, 3600*3).position)
+
+    println(Polar.current.lowVmg(10))
   }
 }

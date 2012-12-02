@@ -5,6 +5,7 @@ import org.supercsv.prefs.CsvPreference
 import java.io.FileReader
 import scala.collection.JavaConversions._
 import annotation.tailrec
+import scala.math._
 
 class Polar(csvPath: String) {
   type Matrix = Seq[Seq[String]]
@@ -38,6 +39,21 @@ class Polar(csvPath: String) {
     require(windSpeed >= 0)
     speeds(windAngleIndex(windAngle))(windSpeedIndex(windSpeed))
   }
+
+  def speedByWindAngle(windSpeed: Double): List[(Int, Double)] = {
+    val wsIndex = windSpeedIndex(windSpeed)
+    windAngles zip speeds.map(row => row(wsIndex))
+  }
+
+  def vmgValue(pair: (Int, Double)): Double = pair match {
+    case (angle, speed) => abs(cos(Pi * angle / 180) * speed)
+  }
+
+  def bestVmg(windSpeed: Double, sideFilter: ((Int, Double)) => Boolean): Int =
+    speedByWindAngle(windSpeed).filter(sideFilter).maxBy(vmgValue)._1
+
+  def lowVmg(windSpeed: Double): Int = bestVmg(windSpeed, { _._1 > 90 })
+  def highVmg(windSpeed: Double): Int = bestVmg(windSpeed, { _._1 < 90 })
 }
 
 object Polar {
