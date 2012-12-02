@@ -2,12 +2,13 @@ package fr.skiffr.oceanrider
 
 import net.sourceforge.jgrib._
 import java.util.Calendar
+import org.joda.time.DateTime
 
-case class Wind(u: Double, v: Double)
+
 case class UVRecords(u: GribRecord, v: GribRecord)
 case class Coord(x: Double, y: Double)
 
-class GribReader(grib: GribFile) {
+class WeatherContext(grib: GribFile) {
 
   val recordsByDate: Map[Calendar, List[GribRecord]] = listRecords groupBy(_.getPDS.getGMTForecastTime)
 
@@ -33,8 +34,13 @@ class GribReader(grib: GribFile) {
     r.getValue(i, j)
   }
 
-  def windAt(c: Coord, at: Calendar): Wind = {
-    val uv = uvRecordsAt(at)
+  def windAt(c: Coord, at: DateTime): Wind = {
+    val uv = uvRecordsAt(at.toGregorianCalendar)
     new Wind(valueForCoord(uv.u, c), valueForCoord(uv.v, c))
   }
+}
+
+object WeatherContext {
+  private val gribFile = new GribFile("/Users/emilien/Downloads/zyGrib_mac-6.0.2/grib/20121127_213227_.grb")
+  val current = new WeatherContext(gribFile)
 }

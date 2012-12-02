@@ -1,6 +1,6 @@
 package fr.skiffr.oceanrider
 
-import org.supercsv.io.{CsvMapReader, CsvListReader}
+import org.supercsv.io.CsvListReader
 import org.supercsv.prefs.CsvPreference
 import java.io.FileReader
 import scala.collection.JavaConversions._
@@ -12,8 +12,8 @@ class Polar(csvPath: String) {
   val csv = new CsvListReader(new FileReader(csvPath), CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE)
   val matrix = readLines(csv, Seq[Seq[String]]())
 
-  val windSpeeds: Seq[Int] = matrix.head.tail.map(_.toInt)
-  val windAngles: Seq[Int] = matrix.tail.map(_.head).map(_.toInt)
+  val windSpeeds: List[Int] = matrix.head.tail.map(_.toInt).toList
+  val windAngles: List[Int] = matrix.tail.map(_.head).map(_.toInt).toList
   val speeds: Seq[Seq[Double]] = matrix.tail.map(_.tail.map(_.toDouble))
 
   csv.close()
@@ -31,4 +31,8 @@ class Polar(csvPath: String) {
 
   def speedFor(windAngle: Double, windSpeed: Double): Double =
     speeds(windAngleIndex(windAngle))(windSpeedIndex(windSpeed))
+}
+
+object Polar {
+  val current = new Polar("/Users/emilien/Downloads/qtvlm_app-3.3.3-patch1_full/polar/boat_imoca60.csv")
 }
