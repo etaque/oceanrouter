@@ -46,7 +46,7 @@ class Polar(csvPath: String) {
   }
 
   def vmgValue(pair: (Int, Double)): Double = pair match {
-    case (angle, speed) => abs(cos(Pi * angle / 180) * speed)
+    case (angle, speed) => abs(cos(toRadians(angle)) * speed)
   }
 
   def bestVmg(windSpeed: Double, sideFilter: ((Int, Double)) => Boolean): Int =

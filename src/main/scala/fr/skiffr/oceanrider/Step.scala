@@ -3,25 +3,22 @@ package fr.skiffr.oceanrider
 import org.joda.time.DateTime
 import org.geotools.referencing.GeodeticCalculator
 
-case class Step(position: Position, time: DateTime) {
+case class Step(route: Route, positions: List[Position], time: DateTime, heading: Double) {
 
-  val wind = WeatherContext.current.windAt(position, time)
+  val position = positions.head
+  val (angleFromOrigin, distanceFromOrigin) = route.origin.angleAndDistanceTo(position)
+  val (angleFromDest, distanceFromDest) = route.dest.angleAndDistanceTo(position)
+
+  lazy val wind = WeatherContext.current.windAt(position, time)
 
   def speedOn(heading: Double) =
     Polar.current.speedFor(wind.angleTo(heading), wind.speed)
 
-  def nextPosition(heading: Double, distance: Double): Position = {
-    val calc = new GeodeticCalculator()
-    calc.setStartingGeographicPoint(position.lon, position.lat)
-    calc.setDirection(heading, distance)
-    new Position(calc.getDestinationPosition.getCoordinate)
-  }
+  def next(newHeading: Double): Step = {
+    val nextTime = time.plusSeconds(route.stepDuration)
+    val distance = speedOn(newHeading) * route.stepDuration
 
-  def next(heading: Double, duration: Int): Step = {
-    val nextTime = time.plusSeconds(duration)
-    val distance = speedOn(heading) * duration
-
-    new Step(nextPosition(heading, distance), nextTime)
+    new Step(route, position.move(newHeading, distance) +: positions, nextTime, newHeading)
   }
 }
 

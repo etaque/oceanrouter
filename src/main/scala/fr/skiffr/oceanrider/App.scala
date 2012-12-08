@@ -5,11 +5,23 @@ import org.joda.time.DateTime
 object App {
   def main(args: Array[String]) {
     val at = new DateTime(2012, 11, 28, 3, 0)
-    val p = new Position(-32.0, -10.0)
-    val s1 = new Step(p, at)
+    val p1 = new Position(-32.0, -10.0)
+    val p2 = new Position(-31.0, -10.0)
 
-    println(s1.next(90, 3600*3).position)
+    val route = new Route(p1, p2, 60*60*3)
+    val start = route.start(at)
 
-    println(Polar.current.lowVmg(10))
+//    println(route.newHeading + " / " + route.distance)
+
+    val delta = 60
+    val firstIteration: IndexedSeq[Step] = -delta to delta by 10 map(d =>
+      start.next((route.heading + d) % 360))
+
+    val secondIteration = firstIteration.map(step => step.next(step.heading))
+
+    println(secondIteration.map(_.positions.head).mkString("\n"))
+
+//    println(secondIteration.head.positions.mkString("\n"))
+//    println(Polar.current.lowVmg(10))
   }
 }
