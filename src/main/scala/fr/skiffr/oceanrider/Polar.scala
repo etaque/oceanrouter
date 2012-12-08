@@ -13,7 +13,7 @@ class Polar(csvPath: String) {
   val csv = new CsvListReader(new FileReader(csvPath), CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE)
   val matrix = readLines(csv, Seq[Seq[String]]())
 
-  val speedParser = (s: String) => Util.knotToMps(s.toDouble)
+  val speedParser = (s: String) => conv.knotToMps(s.toDouble)
 
   val windSpeeds: List[Double] = matrix.head.tail.map(speedParser).toList
   val windAngles: List[Int] = matrix.tail.map(_.head).map(_.toInt).toList

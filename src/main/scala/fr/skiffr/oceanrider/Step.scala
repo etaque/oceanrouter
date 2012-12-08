@@ -1,7 +1,6 @@
 package fr.skiffr.oceanrider
 
 import org.joda.time.DateTime
-import org.geotools.referencing.GeodeticCalculator
 
 case class Step(route: Route, positions: List[Position], time: DateTime, heading: Double) {
 

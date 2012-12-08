@@ -6,7 +6,7 @@ object App {
   def main(args: Array[String]) {
     val at = new DateTime(2012, 11, 28, 3, 0)
     val p1 = new Position(-32.0, -10.0)
-    val p2 = new Position(-31.0, -10.0)
+    val p2 = new Position(-30.0, -9.0)
 
     val route = new Route(p1, p2, 60*60*3)
     val start = route.start(at)

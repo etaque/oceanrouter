@@ -10,11 +10,11 @@ case class Position(lon: Double, lat: Double) {
 
   def angleAndDistanceTo(that: Position): (Double, Double) = {
     calc.setDestinationGeographicPoint(that.lon, that.lat)
-    (Util.azimuthToDegrees(calc.getAzimuth), calc.getOrthodromicDistance)
+    (conv.azimuthToDegrees(calc.getAzimuth), calc.getOrthodromicDistance)
   }
 
   def move(heading: Double, distance: Double): Position = {
-    calc.setDirection(Util.degreesToAzimuth(heading), distance)
+    calc.setDirection(conv.degreesToAzimuth(heading), distance)
     new Position(calc.getDestinationPosition.getCoordinate)
   }
 
