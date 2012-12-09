@@ -22,7 +22,7 @@ case class Route(journey: Journey, positions: List[Position], time: DateTime, he
     val speed = speedOn(newHeading)
     val distance = speed * journey.stepDuration
 
-    if (distance >= distanceToDest) {
+    if (newHeading == headingToDest && distance >= distanceToDest) {
       val destTime = time.plusSeconds((distanceToDest / speed).toInt)
       new Route(journey, position.move(newHeading, distanceToDest) +: positions, destTime, newHeading, true)
     }
