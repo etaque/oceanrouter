@@ -42,7 +42,7 @@ class Polar(csvPath: String) {
 
   def speedByWindAngle(windSpeed: Double): List[(Int, Double)] = {
     val wsIndex = windSpeedIndex(windSpeed)
-    windAngles zip speeds.map(row => row(wsIndex))
+    windAngles zip speeds.map(_(wsIndex))
   }
 
   def vmgValue(pair: (Int, Double)): Double = pair match {

@@ -1,6 +1,7 @@
 package fr.skiffr.oceanrider
 
 import org.geotools.referencing.GeodeticCalculator
+import fr.skiffr.oceanrider.conv._
 
 case class Position(lon: Double, lat: Double) {
   val calc = new GeodeticCalculator()
@@ -10,11 +11,11 @@ case class Position(lon: Double, lat: Double) {
 
   def angleAndDistanceTo(that: Position): (Double, Double) = {
     calc.setDestinationGeographicPoint(that.lon, that.lat)
-    (conv.azimuthToDegrees(calc.getAzimuth), calc.getOrthodromicDistance)
+    (azimuthToDegrees(calc.getAzimuth), calc.getOrthodromicDistance)
   }
 
   def move(heading: Double, distance: Double): Position = {
-    calc.setDirection(conv.degreesToAzimuth(heading), distance)
+    calc.setDirection(degreesToAzimuth(heading), distance)
     new Position(calc.getDestinationPosition.getCoordinate)
   }
 
