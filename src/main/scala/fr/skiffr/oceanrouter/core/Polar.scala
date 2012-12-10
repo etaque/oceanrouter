@@ -1,4 +1,4 @@
-package fr.skiffr.oceanrouter
+package fr.skiffr.oceanrouter.core
 
 import org.supercsv.io.CsvListReader
 import org.supercsv.prefs.CsvPreference
@@ -6,6 +6,7 @@ import java.io.FileReader
 import scala.collection.JavaConversions._
 import annotation.tailrec
 import scala.math._
+import fr.skiffr.oceanrouter.conv
 
 class Polar(csvPath: String) {
   type Matrix = Seq[Seq[String]]

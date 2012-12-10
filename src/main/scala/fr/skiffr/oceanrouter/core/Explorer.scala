@@ -1,7 +1,9 @@
-package fr.skiffr.oceanrouter
+package fr.skiffr.oceanrouter.core
 
 import org.joda.time.DateTime
 import annotation.tailrec
+import fr.skiffr.oceanrouter.conv
+import fr.skiffr.oceanrouter.core.Route
 
 class Explorer(val journey: Journey, val at: DateTime) {
 

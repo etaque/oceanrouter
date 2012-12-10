@@ -1,4 +1,4 @@
-package fr.skiffr.oceanrouter
+package fr.skiffr.oceanrouter.core
 
 case class Wind(u: Double, v: Double) {
   lazy val direction = (u, v) match {

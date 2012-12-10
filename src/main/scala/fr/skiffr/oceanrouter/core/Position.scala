@@ -1,4 +1,4 @@
-package fr.skiffr.oceanrouter
+package fr.skiffr.oceanrouter.core
 
 import org.geotools.referencing.GeodeticCalculator
 import fr.skiffr.oceanrouter.conv._
