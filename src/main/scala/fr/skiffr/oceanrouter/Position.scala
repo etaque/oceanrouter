@@ -1,7 +1,7 @@
-package fr.skiffr.oceanrider
+package fr.skiffr.oceanrouter
 
 import org.geotools.referencing.GeodeticCalculator
-import fr.skiffr.oceanrider.conv._
+import fr.skiffr.oceanrouter.conv._
 
 case class Position(lon: Double, lat: Double) {
   val calc = new GeodeticCalculator()

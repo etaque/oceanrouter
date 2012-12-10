@@ -1,4 +1,4 @@
-package fr.skiffr.oceanrider
+package fr.skiffr.oceanrouter
 
 import net.sourceforge.jgrib._
 import java.util.Calendar

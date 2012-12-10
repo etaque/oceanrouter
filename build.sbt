@@ -18,4 +18,4 @@ libraryDependencies ++= Seq(
   "org.geotools" % "gt-referencing" % "8.4"
 )
 
-initialCommands := "import fr.skiffr.oceanrider._"
+initialCommands := "import fr.skiffr.oceanrouter._"

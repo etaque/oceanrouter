@@ -1,4 +1,4 @@
-package fr.skiffr.oceanrider
+package fr.skiffr.oceanrouter
 
 import org.specs2.mutable._
 

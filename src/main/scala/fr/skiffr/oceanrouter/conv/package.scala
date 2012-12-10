@@ -1,4 +1,4 @@
-package fr.skiffr.oceanrider
+package fr.skiffr.oceanrouter
 
 package object conv {
   def knotToMps(knot: Double): Double = knot * 1.852 * 1000 / 3600
