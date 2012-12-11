@@ -3,8 +3,16 @@ package fr.skiffr.oceanrouter.core
 import org.joda.time.DateTime
 import annotation.tailrec
 import fr.skiffr.oceanrouter.conv
-import fr.skiffr.oceanrouter.core.Route
+import akka.actor.Actor
 
+
+case class RoutingRequest(origin: Position, dest: Position, at: DateTime)
+
+class ExplorerActor extends Actor {
+  def receive = {
+    case RoutingRequest(origin, dest, at) => sender ! new Explorer(new Journey(origin, dest, 60*60*3), at).run(50)
+  }
+}
 class Explorer(val journey: Journey, val at: DateTime) {
 
   val divergenceDelta = 60

@@ -1,7 +1,11 @@
 package fr.skiffr.oceanrouter.api
 
 import akka.actor.Actor
+import akka.pattern.ask
 import spray.routing.HttpService
+import fr.skiffr.oceanrouter.Boot
+import akka.util.Timeout
+import akka.util.duration._
 
 class ApiServiceActor extends Actor with ApiService {
 
@@ -19,6 +23,8 @@ trait ApiService extends HttpService {
   val route = {
     get {
       path("") {
+        implicit val timeout = Timeout(10 seconds)
+        Boot.explorerService.ask("test")
         complete("WIN")
       }
     }

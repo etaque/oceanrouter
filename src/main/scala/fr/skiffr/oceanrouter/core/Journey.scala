@@ -1,7 +1,6 @@
 package fr.skiffr.oceanrouter.core
 
 import org.joda.time.DateTime
-import fr.skiffr.oceanrouter.core.Route
 
 class Journey(val origin: Position, val dest: Position, val stepDuration: Int) {
 
