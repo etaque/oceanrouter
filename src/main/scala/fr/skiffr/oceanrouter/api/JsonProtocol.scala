@@ -10,10 +10,9 @@ object JsonProtocol extends DefaultJsonProtocol {
     def write(res: Position) =
       JsArray(JsNumber(res.lon), JsNumber(res.lat))
 
-    def read(value: JsValue) = {
-      value.asJsObject.getFields("lon", "lat") match {
-        case Seq(JsString(lon), JsString(lat)) => new Position(lon.toDouble, lat.toDouble)
-      }
+    def read(value: JsValue) = value match {
+      case JsArray(JsNumber(lon) :: JsNumber(lat) :: Nil) => new Position(lon.toDouble, lat.toDouble)
+      case _ => deserializationError("Position expected")
     }
   }
 

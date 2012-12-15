@@ -35,10 +35,11 @@ trait ApiService extends HttpService {
     respondWithMediaType(`application/json`) {
       get {
         path("") {
-          parameters('fromLon.as[Double], 'fromLat.as[Double], 'toLon.as[Double], 'toLat.as[Double]) {
-            (fromLon, fromLat, toLon, toLat) =>
+          parameters('fromLon.as[Double], 'fromLat.as[Double], 'toLon.as[Double], 'toLat.as[Double], 'date.as[String]) {
+            (fromLon, fromLat, toLon, toLat, date) =>
 
-              val at = new DateTime(2012, 11, 28, 3, 0)
+              val at = DateTime.parse(date)
+//              val at = new DateTime(2012, 11, 28, 3, 0)
               val p1 = new Position(fromLon, fromLat)
               val p2 = new Position(toLon, toLat)
 
