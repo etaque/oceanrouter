@@ -4,19 +4,23 @@ import org.joda.time.DateTime
 import annotation.tailrec
 import fr.skiffr.oceanrouter.conv
 import akka.actor.Actor
+import java.lang.IllegalArgumentException
 
-case class RoutingRequest(origin: Position, dest: Position, at: DateTime)
+case class RoutingRequest(oLon: Double, oLat: Double, dLon: Double, dLat: Double, at: String) {
+//  require(try { DateTime.parse(at); true } catch(e: IllegalArgumentException) { false })
+}
 case class RoutingResult(bestRoute: Option[Route], steps: List[Route])
 
-class ExplorerActor extends Actor {
+class RoutingActor extends Actor {
   def receive = {
-    case r: RoutingRequest => sender ! new Explorer(r).run
+    case r: RoutingRequest => sender ! new Routing(r).run
   }
 }
 
-class Explorer(val journey: Journey, val at: DateTime) {
+class Routing(val journey: Journey, val at: DateTime) {
 
-  def this(r: RoutingRequest) = this(new Journey(r.origin, r.dest, 60*60*3), r.at)
+  def this(r: RoutingRequest) =
+    this(new Journey(Position(r.oLon, r.oLat), Position(r.dLon, r.dLat), 60*60*3), DateTime.parse(r.at))
 
   val divergenceDelta = 60
   val convergenceDelta = 15

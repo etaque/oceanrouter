@@ -10,7 +10,7 @@ object Boot extends App with SprayCanHttpServerApp {
   // create and start our service actor
   val apiService = system.actorOf(Props[api.ApiServiceActor], "api-service")
 
-  val explorerService = system.actorOf(Props[core.ExplorerActor], "explorer-service")
+  val routingService = system.actorOf(Props[core.RoutingActor], "routing-service")
 
   // create a new HttpServer using our handler and tell it where to bind to
   newHttpServer(apiService) ! Bind(host, port)

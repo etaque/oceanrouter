@@ -30,23 +30,21 @@ class ApiServiceActor extends Actor with ApiService {
 trait ApiService extends HttpService {
   implicit val timeout = Timeout(60 seconds)
 
-
   val route = {
     respondWithMediaType(`application/json`) {
-      get {
-        path("") {
-          parameters('fromLon.as[Double], 'fromLat.as[Double], 'toLon.as[Double], 'toLat.as[Double], 'date.as[String]) {
-            (fromLon, fromLat, toLon, toLat, date) =>
-
-              val at = DateTime.parse(date)
-//              val at = new DateTime(2012, 11, 28, 3, 0)
-              val p1 = new Position(fromLon, fromLat)
-              val p2 = new Position(toLon, toLat)
-
+      path("routings") {
+        get {
+          parameters('fromLon.as[Double], 'fromLat.as[Double], 'toLon.as[Double], 'toLat.as[Double], 'date ?).as(RoutingRequest) {
+            (routingRequest: RoutingRequest) =>
               complete {
-                Boot.explorerService.ask(RoutingRequest(p1, p2, at)).mapTo[RoutingResult]
+                Boot.routingService.ask(routingRequest).mapTo[RoutingResult]
               }
           }
+        }
+      } ~
+      path("races" / Rest) { path =>
+        complete {
+          path
         }
       }
     }
