@@ -21,5 +21,3 @@ case class Position(lon: Double, lat: Double) {
 
   override def toString: String = lon + "," + lat
 }
-
-object Position

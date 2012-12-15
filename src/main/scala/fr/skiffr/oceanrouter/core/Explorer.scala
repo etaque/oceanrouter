@@ -5,15 +5,18 @@ import annotation.tailrec
 import fr.skiffr.oceanrouter.conv
 import akka.actor.Actor
 
-
 case class RoutingRequest(origin: Position, dest: Position, at: DateTime)
+case class RoutingResult(bestRoute: Option[Route], steps: List[Route])
 
 class ExplorerActor extends Actor {
   def receive = {
-    case RoutingRequest(origin, dest, at) => sender ! new Explorer(new Journey(origin, dest, 60*60*3), at).run(50)
+    case r: RoutingRequest => sender ! new Explorer(r).run
   }
 }
+
 class Explorer(val journey: Journey, val at: DateTime) {
+
+  def this(r: RoutingRequest) = this(new Journey(r.origin, r.dest, 60*60*3), r.at)
 
   val divergenceDelta = 60
   val convergenceDelta = 15
@@ -27,7 +30,7 @@ class Explorer(val journey: Journey, val at: DateTime) {
 
   val start = journey.start(at)
 
-  def run(loops: Int): (Option[Route], List[Route]) = loop(List[Route](start), loops)
+  def run: RoutingResult = loop(List[Route](start), 50)
 
   def takeBestRoutes(routeCloud: List[Route]): List[Route] = {
     for {
@@ -39,9 +42,8 @@ class Explorer(val journey: Journey, val at: DateTime) {
   def nextAngles(s: Route) = if (s.convergence) convergenceAngles else divergenceAngles
 
   @tailrec
-  private def loop(routesStep: List[Route], count: Int): (Option[Route], List[Route]) = {
-    print(".")
-    if (count == 0) (None, routesStep)
+  private def loop(routesStep: List[Route], count: Int): RoutingResult = {
+    if (count == 0) RoutingResult(None, routesStep)
     else {
       val cloud = routesStep.par.flatMap(s =>
         if (s.convergence)
@@ -51,13 +53,9 @@ class Explorer(val journey: Journey, val at: DateTime) {
       ).toList
 
       cloud.filter(_.finished).sortBy(_.time.getMillis) match {
-        case winner :: xs => (Some(winner), routesStep)
+        case winner :: xs => RoutingResult(Some(winner), routesStep)
         case _ => loop(takeBestRoutes(cloud), count - 1)
       }
     }
-  }
-
-  def printIteration(i: List[Route]): Unit = {
-    println(i.length + "\n" + i.sortBy(_.headingFromOrigin).map(_.position).mkString(";"))
   }
 }

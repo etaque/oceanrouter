@@ -14,8 +14,4 @@ object Boot extends App with SprayCanHttpServerApp {
 
   // create a new HttpServer using our handler and tell it where to bind to
   newHttpServer(apiService) ! Bind(host, port)
-
-//  val httpService    = actorOf(new HttpService(mainModule.helloService))
-//  val rootService    = actorOf(new SprayCanRootService(httpService))
-//  val sprayCanServer = actorOf(new HttpServer(new ServerConfig(host = host, port = port)))
 }

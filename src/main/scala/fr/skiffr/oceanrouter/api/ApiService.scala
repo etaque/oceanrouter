@@ -6,6 +6,14 @@ import spray.routing.HttpService
 import fr.skiffr.oceanrouter.Boot
 import akka.util.Timeout
 import akka.util.duration._
+import fr.skiffr.oceanrouter.core._
+import org.joda.time.DateTime
+import fr.skiffr.oceanrouter.core.RoutingRequest
+import spray.http.MediaTypes.`application/json`
+import spray.httpx.SprayJsonSupport._
+import fr.skiffr.oceanrouter.api.JsonProtocol._
+import spray.httpx.marshalling._
+import spray.json._
 
 class ApiServiceActor extends Actor with ApiService {
 
@@ -20,12 +28,25 @@ class ApiServiceActor extends Actor with ApiService {
 }
 
 trait ApiService extends HttpService {
+  implicit val timeout = Timeout(60 seconds)
+
+
   val route = {
-    get {
-      path("") {
-        implicit val timeout = Timeout(10 seconds)
-        Boot.explorerService.ask("test")
-        complete("WIN")
+    respondWithMediaType(`application/json`) {
+      get {
+        path("") {
+          parameters('fromLon.as[Double], 'fromLat.as[Double], 'toLon.as[Double], 'toLat.as[Double]) {
+            (fromLon, fromLat, toLon, toLat) =>
+
+              val at = new DateTime(2012, 11, 28, 3, 0)
+              val p1 = new Position(fromLon, fromLat)
+              val p2 = new Position(toLon, toLat)
+
+              complete {
+                Boot.explorerService.ask(RoutingRequest(p1, p2, at)).mapTo[RoutingResult]
+              }
+          }
+        }
       }
     }
   }
