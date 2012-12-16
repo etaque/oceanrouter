@@ -2,8 +2,9 @@ package fr.skiffr.oceanrouter.core
 
 import org.geotools.referencing.GeodeticCalculator
 import fr.skiffr.oceanrouter.conv._
+import org.joda.time.DateTime
 
-case class Position(lon: Double, lat: Double) {
+case class Position(val lon: Double, val lat: Double) {
   val calc = new GeodeticCalculator()
   calc.setStartingGeographicPoint(lon, lat)
 
@@ -21,3 +22,7 @@ case class Position(lon: Double, lat: Double) {
 
   override def toString: String = lon + "," + lat
 }
+
+case class Log(position: Position, time: DateTime,
+          speed: Double, heading: Double,
+          windSpeed: Double, windHeading: Double)

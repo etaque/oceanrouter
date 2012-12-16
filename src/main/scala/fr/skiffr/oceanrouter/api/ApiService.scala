@@ -41,11 +41,6 @@ trait ApiService extends HttpService {
               }
           }
         }
-      } ~
-      path("races" / Rest) { path =>
-        complete {
-          path
-        }
       }
     }
   }

@@ -12,7 +12,7 @@ object App {
     val explorer = new Routing(j, at)
 
     explorer.run match {
-      case RoutingResult(Some(winner), routes) => println("WIN!\n" + winner.positions.mkString(";"))
+      case RoutingResult(Some(winner), routes) => println("WIN!\n" + winner.path.mkString(";"))
       case RoutingResult(None, routes) => println("FAIL")
     }
   }

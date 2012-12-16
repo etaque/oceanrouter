@@ -2,9 +2,8 @@ package fr.skiffr.oceanrouter.core
 
 import org.joda.time.DateTime
 
-case class Route(journey: Journey, positions: List[Position], time: DateTime, heading: Double, finished: Boolean = false) {
-
-  val position = positions.head
+case class Route(journey: Journey, path: List[Log], position: Position,
+                 time: DateTime, finished: Boolean = false) {
 
   lazy val (headingFromOrigin, distanceFromOrigin) = journey.origin.angleAndDistanceTo(position)
   lazy val (headingToDest, distanceToDest) = position.angleAndDistanceTo(journey.dest)
@@ -15,18 +14,21 @@ case class Route(journey: Journey, positions: List[Position], time: DateTime, he
   lazy val wind = WeatherContext.current.windAt(position, time)
 
   def speedOn(heading: Double) =
-    Polar.current.speedFor(wind.angleTo(heading), wind.speed)
+    journey.polar.speedFor(wind.angleTo(heading), wind.speed)
 
-  def next(newHeading: Double): Route = {
+  def next(heading: Double): Route = {
     val nextTime = time.plusSeconds(journey.stepDuration)
-    val speed = speedOn(newHeading)
+    val speed = speedOn(heading)
     val distance = speed * journey.stepDuration
 
-    if (newHeading == headingToDest && distance >= distanceToDest) {
+    val log = new Log(position, time, speed, heading, wind.speed, wind.direction)
+
+    if (heading == headingToDest && distance >= distanceToDest) {
+      // success
       val destTime = time.plusSeconds((distanceToDest / speed).toInt)
-      new Route(journey, position.move(newHeading, distanceToDest) +: positions, destTime, newHeading, true)
+      new Route(journey, path :+ log, position.move(heading, distanceToDest), destTime, true)
     }
-    else new Route(journey, position.move(newHeading, distance) +: positions, nextTime, newHeading)
+    else new Route(journey, path :+ log, position.move(heading, distance), nextTime)
   }
 }
 
