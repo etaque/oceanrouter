@@ -7,7 +7,7 @@ import akka.actor.Actor
 import java.lang.IllegalArgumentException
 
 case class RoutingRequest(oLon: Double, oLat: Double, dLon: Double, dLat: Double, at: String) {
-//  require(try { DateTime.parse(at); true } catch(e: IllegalArgumentException) { false })
+  require(try { DateTime.parse(at); true } catch { case _: IllegalArgumentException => false })
 }
 case class RoutingResult(bestRoute: Option[Route], steps: List[Route])
 
