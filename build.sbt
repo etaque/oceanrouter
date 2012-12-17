@@ -1,3 +1,7 @@
+import com.typesafe.sbt.SbtStartScript
+
+seq(SbtStartScript.startScriptForClassesSettings: _*)
+
 name := "Basic Project"
 
 organization := "fr.skiffr"
@@ -29,3 +33,4 @@ libraryDependencies ++= Seq(
 )
 
 initialCommands := "import skiffr.oceanrouter._"
+
