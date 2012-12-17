@@ -58,5 +58,5 @@ class Polar(csvPath: String) {
 }
 
 object Polar {
-  val current = new Polar("/Users/emilien/Downloads/qtvlm_app-3.3.3-patch1_full/polar/boat_imoca60.csv")
+  val current = new Polar("polars/imoca60.csv")
 }
