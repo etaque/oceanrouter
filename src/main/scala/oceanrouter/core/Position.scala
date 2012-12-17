@@ -1,7 +1,7 @@
-package fr.skiffr.oceanrouter.core
+package oceanrouter.core
 
 import org.geotools.referencing.GeodeticCalculator
-import fr.skiffr.oceanrouter.conv._
+import oceanrouter.conv._
 import org.joda.time.DateTime
 
 case class Position(val lon: Double, val lat: Double) {

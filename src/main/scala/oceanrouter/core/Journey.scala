@@ -1,4 +1,4 @@
-package fr.skiffr.oceanrouter.core
+package oceanrouter.core
 
 import org.joda.time.DateTime
 

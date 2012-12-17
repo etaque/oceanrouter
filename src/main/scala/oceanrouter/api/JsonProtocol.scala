@@ -1,7 +1,7 @@
-package fr.skiffr.oceanrouter.api
+package oceanrouter.api
 
 import spray.json._
-import fr.skiffr.oceanrouter.core._
+import oceanrouter.core._
 import org.joda.time.DateTime
 
 object JsonProtocol extends DefaultJsonProtocol {

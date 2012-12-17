@@ -1,17 +1,17 @@
-package fr.skiffr.oceanrouter.api
+package oceanrouter.api
 
 import akka.actor.Actor
 import akka.pattern.ask
 import spray.routing.HttpService
-import fr.skiffr.oceanrouter.Boot
+import oceanrouter.Boot
+import oceanrouter.core._
+import oceanrouter.core.RoutingRequest
+import oceanrouter.api.JsonProtocol._
 import akka.util.Timeout
 import akka.util.duration._
-import fr.skiffr.oceanrouter.core._
 import org.joda.time.DateTime
-import fr.skiffr.oceanrouter.core.RoutingRequest
 import spray.http.MediaTypes.`application/json`
 import spray.httpx.SprayJsonSupport._
-import fr.skiffr.oceanrouter.api.JsonProtocol._
 import spray.httpx.marshalling._
 import spray.json._
 

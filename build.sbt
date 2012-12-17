@@ -2,9 +2,9 @@ import com.typesafe.sbt.SbtStartScript
 
 seq(SbtStartScript.startScriptForClassesSettings: _*)
 
-name := "Basic Project"
+name := "Ocean Router"
 
-organization := "fr.skiffr"
+organization := ""
 
 version := "0.1.0-SNAPSHOT"
 

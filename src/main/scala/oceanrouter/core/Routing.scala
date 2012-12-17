@@ -1,7 +1,7 @@
-package fr.skiffr.oceanrouter.core
+package oceanrouter.core
 
 import annotation.tailrec
-import fr.skiffr.oceanrouter.conv._
+import oceanrouter.conv._
 import akka.actor.Actor
 import java.lang.IllegalArgumentException
 import org.scala_tools.time.Imports._

@@ -1,4 +1,4 @@
-package fr.skiffr.oceanrouter
+package oceanrouter
 
 import akka.actor.Props
 import spray.can.server.SprayCanHttpServerApp
