@@ -32,5 +32,5 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" % "akka-actor" % "2.0.4"
 )
 
-initialCommands := "import skiffr.oceanrouter._"
+initialCommands := "import oceanrouter._"
 
