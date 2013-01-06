@@ -2,16 +2,18 @@ package oceanrouter.core
 
 import org.supercsv.io.CsvListReader
 import org.supercsv.prefs.CsvPreference
-import java.io.FileReader
+import java.io.{InputStreamReader, FileReader}
 import scala.collection.JavaConversions._
 import annotation.tailrec
 import scala.math._
 import oceanrouter.conv
+import io.Source
 
 class Polar(csvPath: String) {
   type Matrix = Seq[Seq[String]]
 
-  val csv = new CsvListReader(new FileReader(csvPath), CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE)
+  val source = new InputStreamReader(getClass.getResourceAsStream(csvPath))
+  val csv = new CsvListReader(source, CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE)
   val matrix = readLines(csv, Seq[Seq[String]]())
 
   val speedParser = (s: String) => conv.knotToMps(s.toDouble)
@@ -58,5 +60,5 @@ class Polar(csvPath: String) {
 }
 
 object Polar {
-  val current = new Polar("polars/imoca60.csv")
+  val current = new Polar("/polars/imoca60.csv")
 }
