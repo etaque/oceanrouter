@@ -3,6 +3,7 @@ package oceanrouter.api
 import akka.actor.Actor
 import akka.pattern.ask
 import spray.routing.HttpService
+import spray.http.HttpHeaders.RawHeader
 import oceanrouter.Boot
 import oceanrouter.core._
 import oceanrouter.core.RoutingRequest
@@ -14,6 +15,7 @@ import spray.http.MediaTypes.`application/json`
 import spray.httpx.SprayJsonSupport._
 import spray.httpx.marshalling._
 import spray.json._
+import spray.http.HttpHeader
 
 class ApiServiceActor extends Actor with ApiService {
 
@@ -30,15 +32,23 @@ class ApiServiceActor extends Actor with ApiService {
 trait ApiService extends HttpService {
   implicit val timeout = Timeout(60 seconds)
 
+  case class `Access-Control-Allow-Origin`(origin: String) extends HttpHeader {
+    def name = "Access-Control-Allow-Origin"
+    def lowercaseName = "access-control-allow-origin"
+    def value = origin
+  }
+
   val route = {
-    respondWithMediaType(`application/json`) {
-      path("routings") {
-        get {
-          parameters('fromLon.as[Double], 'fromLat.as[Double], 'toLon.as[Double], 'toLat.as[Double], 'date ?).as(RoutingRequest) {
-            (routingRequest: RoutingRequest) =>
-              complete {
-                Boot.routingService.ask(routingRequest).mapTo[RoutingResult]
-              }
+    respondWithHeaders(`Access-Control-Allow-Origin`("http://oceanrouter-ui.dev")) {
+      respondWithMediaType(`application/json`) {
+        path("routings") {
+          get {
+            parameters('fromLon.as[Double], 'fromLat.as[Double], 'toLon.as[Double], 'toLat.as[Double]).as(RoutingRequest) {
+              (routingRequest: RoutingRequest) =>
+                complete {
+                  Boot.routingService.ask(routingRequest).mapTo[RoutingResult]
+                }
+            }
           }
         }
       }
