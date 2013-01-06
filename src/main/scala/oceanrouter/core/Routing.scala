@@ -3,12 +3,9 @@ package oceanrouter.core
 import annotation.tailrec
 import oceanrouter.conv._
 import akka.actor.Actor
-import java.lang.IllegalArgumentException
 import org.scala_tools.time.Imports._
 
-case class RoutingRequest(oLon: Double, oLat: Double, dLon: Double, dLat: Double, at: String) {
-  require(try { new DateTime(at); true } catch { case _: IllegalArgumentException => false })
-}
+case class RoutingRequest(oLon: Double, oLat: Double, dLon: Double, dLat: Double)
 case class RoutingResult(bestRoute: Option[Route], steps: List[Route])
 
 class RoutingActor extends Actor {
@@ -20,7 +17,7 @@ class RoutingActor extends Actor {
 class Routing(val journey: Journey, val at: DateTime) {
 
   def this(r: RoutingRequest) =
-    this(new Journey(new Position(r.oLon, r.oLat), new Position(r.dLon, r.dLat)), new DateTime(r.at))
+    this(new Journey(new Position(r.oLon, r.oLat), new Position(r.dLon, r.dLat)), new DateTime())
 
   val divergenceDelta = 50
   val convergenceDelta = 25
